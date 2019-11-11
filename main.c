@@ -138,7 +138,7 @@ void clear_screen(struct fb_config *fb, int r, int g, int b)
 
 void usage(const char *argv_0)
 {
-	printf("\nUsage %s: [-r<red>] [-g<green>] [-b<blue>] [-B<border>] [-i<buffer index>]\n", argv_0);
+	printf("\nUsage %s: [-r<red>] [-g<green>] [-b<blue>] [-B<border>] [-i<buffer index>] [-d<device>]\n", argv_0);
 	printf("  All colors default to 0xff\n");
 	printf("  The border color applies to all rgb and is 10 pixels wide\n");
 	printf("  If border is not provided, none is drawn.\n");
@@ -162,7 +162,9 @@ int main(int argc, char **argv)
 	int index = 0;
 	int loop = 0;
 
-	while ((opt = getopt(argc, argv, "r:g:b:B:i:h")) != -1) {
+	char* device = "/dev/fb0";
+		
+	while ((opt = getopt(argc, argv, "r:g:b:n:d:h")) != -1) {
 		switch (opt) {
 		case 'r':
 			red = 0xff & strtol(optarg, NULL, 0);
@@ -182,6 +184,8 @@ int main(int argc, char **argv)
 
 		case 'i':
 			index = strtol(optarg, NULL, 0);
+		case 'd':
+			device = optarg;
 			break;
 
 		default:
@@ -192,7 +196,7 @@ int main(int argc, char **argv)
 
 	memset(&fb, 0, sizeof(fb));
 
-	if ((fd = open("/dev/fb0", O_RDWR)) < 0) {
+	if ((fd = open(device, O_RDWR)) < 0) {
 		perror("open");
 		exit(1);
 	}
