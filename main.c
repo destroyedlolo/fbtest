@@ -164,7 +164,7 @@ int main(int argc, char **argv)
 
 	char* device = "/dev/fb0";
 		
-	while ((opt = getopt(argc, argv, "r:g:b:n:d:h")) != -1) {
+	while ((opt = getopt(argc, argv, "r:g:b:B:i:d:h")) != -1) {
 		switch (opt) {
 		case 'r':
 			red = 0xff & strtol(optarg, NULL, 0);
@@ -184,6 +184,7 @@ int main(int argc, char **argv)
 
 		case 'i':
 			index = strtol(optarg, NULL, 0);
+			break;
 		case 'd':
 			device = optarg;
 			break;
@@ -197,7 +198,7 @@ int main(int argc, char **argv)
 	memset(&fb, 0, sizeof(fb));
 
 	if ((fd = open(device, O_RDWR)) < 0) {
-		perror("open");
+		perror(device);
 		exit(1);
 	}
 
